@@ -32,4 +32,15 @@ describe "registering queries" do
     end
     responses.should == [{"name" => "Fred Blogs"}]
   end
+
+  it "should yield the registered response if an array response is registered" do
+    FakeNetLdap.register_query(filter,  [{"name" => "Fred Blogs"}, {"name" => "John Smith"}])
+    responses = []
+    connection = ldap_connection
+    connection.search(:base => 'cn=plop', :filter => filter) do |result|
+      responses << result
+    end
+    responses.should == [{"name" => "Fred Blogs"}, {"name" => "John Smith"}]
+  end
+
 end
