@@ -10,7 +10,7 @@ describe "clearing query registrations" do
     FakeNetLdap.query_registered?(filter).should be_false
   end
 
-  it "it should raise an LdapConnectionNotAllowed exception after query registrations have been cleared" do
+  it "it should raise an ConnectionNotAllowed exception after query registrations have been cleared" do
     FakeNetLdap.register_query(filter, {"name" => "Fred Blogs"})
     FakeNetLdap.clear_query_registrations
     connection = ldap_connection

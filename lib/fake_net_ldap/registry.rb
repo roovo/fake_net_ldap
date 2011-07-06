@@ -11,7 +11,7 @@ module FakeNetLdap
     end
 
     def query_registered?(query)
-      @query_map.has_key?(query.to_s) || @query_map.has_key?(:unregistered_query)
+      @query_map.has_key?(query.to_s) || @query_map.has_key?('unregistered_query')
     end
 
     def register_query(query, response)
@@ -23,7 +23,7 @@ module FakeNetLdap
       if registered && @query_map.has_key?(query.to_s)
         response = @query_map[query.to_s]
       elsif registered
-        response = @query_map[:unregistered_query]
+        response = @query_map['unregistered_query']
       else
         return nil
       end
