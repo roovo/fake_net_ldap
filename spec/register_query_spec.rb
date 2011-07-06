@@ -11,4 +11,9 @@ describe "registering queries" do
     FakeNetLdap.register_query('with_array_response', [{"name" => "Fred Blogs"}, {"name" => "John Smith"}])
     FakeNetLdap.query_registered?('with_array_response').should be_true
   end
+
+  it "should allow queries to be registered which should raise an exception" do
+    FakeNetLdap.register_query('with_exception_response', StandardError)
+    FakeNetLdap.query_registered?('with_exception_response').should be_true
+  end
 end
