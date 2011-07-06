@@ -14,6 +14,5 @@ LDAP_HOST = "ldap.example.com"
 LDAP_PORT = 389
 
 def ldap_connection
-  conn = Net::LDAP.new
-  #conn.bind
+  Net::LDAP.new
 end

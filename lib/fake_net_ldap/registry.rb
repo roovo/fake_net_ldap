@@ -1,5 +1,7 @@
 module FakeNetLdap
+
   class Registry #:nodoc:
+
     include Singleton
 
     def initialize

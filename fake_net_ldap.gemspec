@@ -10,7 +10,6 @@ Gem::Specification.new do |s|
   s.email       = ["rupert.voelcker@bt.com", "richard.pilkington@bt.com"]
   s.homepage    = ""
   s.summary     = %q{Use to fake out calls to Net::LDAP}
-  s.description = %q{TODO: Write a gem description}
 
   s.add_dependency "net-ldap"
 

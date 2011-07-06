@@ -1,0 +1,97 @@
+= FakeNetLdap
+
+FakeNetLdap is a helper for faking LDAP sarches made via the net-ldap library.
+It works at a global level, without requiring modification of code or writing
+of extensive stubs.
+
+
+== FEATURES/PROBLEMS:
+
+It is pretty limited in what it can do.
+
+If it is used, all calls to bind, auth, and search are intercepted and not passed on
+to the net-ldap library.
+
+Queries must be made using Net::LDAP search method.
+
+Responses to queries must be registered otherwise a
+FakeNetLdap::ConnectionNotAllowed exception is raised.
+
+The registered responses are yielded to a block passed to the search method.
+
+== EXAMPLES:
+
+Start by requiring FakeNetLdap:
+
+  require 'rubygems'
+  require 'fake_net_ldap'
+
+=== Registering users for binding
+
+  FakeNetLdap.register_user(:username => "fred", :password => "secret")
+
+  connection = Net::LDAP.new
+  connection.auth("fred", "secret")
+  connection.bind                   # returns true
+  connection.auth("fred", "forgotten")
+  connection.bind                   # returns false
+
+=== Registering basic hash responses to searches
+
+  For situations where you want to fake a single response to the search
+
+  user_filter = Net::LDAP::Filter.eq('uid', 'some-user')
+  FakeNetLdap.register_query(user_filter, {"name" => "Fred Blogs"})
+
+  connection = Net::LDAP.new
+  results = []
+  connection.search(:filter=> user_filter) { |r| results << r }
+  puts results.inspect            # => [{"name" => "Fred Blogs"}]
+
+=== Registering a response to unregistered queries
+
+  To provide a default response to any queries that have not been registered
+  use:
+
+  FakeNetLdap.clear_query_registrations
+  FakeNetLdap.register_query(:unregistered_query, [{"name" => "Fred Blogs"}, {"name" => "John Smith"}])
+
+  unregistered_filter = Net::LDAP::Filter.eq('uid', 'some-user')
+  connection = Net::LDAP.new
+  results = []
+  connection.search(:filter=> unregistered_filter) { |r| results << r }
+  puts results.inspect            # => [{"name" => "Fred Blogs"}, {"name" => "John Smith"}]
+
+== REQUIREMENTS:
+
+net-ldap
+
+== INSTALL:
+
+gem install fake_net_ldap
+
+== LICENSE:
+
+(The MIT License)
+
+Copyright (c) 2009 FIXME full name
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+'Software'), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
