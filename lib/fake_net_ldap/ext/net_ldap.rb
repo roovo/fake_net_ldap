@@ -6,8 +6,8 @@ class Net::LDAP
     if FakeNetLdap.query_registered?(attrs[:filter])
       FakeNetLdap.response_for(attrs[:filter], &block)
     else
-      #raise FakeNetLdap::LdapConnectionNotAllowed,
-            #"Real LDAP connections are disabled.  Unregistered query: #{filter}"
+      raise FakeNetLdap::ConnectionNotAllowed,
+            "Real LDAP connections are disabled.  Unregistered query: #{attrs[:filter]}"
     end
   end
 

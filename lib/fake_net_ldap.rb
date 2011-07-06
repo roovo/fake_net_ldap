@@ -6,6 +6,10 @@ require 'fake_net_ldap/responder'
 
 module FakeNetLdap
 
+  # This exception is raised if you try to make a query you haven't
+  # registered.
+  class ConnectionNotAllowed < StandardError ; end ;
+
   def self.clear_query_registrations
     Registry.instance.clear_query_registrations
   end
