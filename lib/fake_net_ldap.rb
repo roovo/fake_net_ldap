@@ -10,12 +10,20 @@ module FakeNetLdap
   # registered.
   class ConnectionNotAllowed < StandardError ; end ;
 
+  def self.register_user(attrs)
+    Registry.instance.register_user(attrs)
+  end
+
   def self.clear_query_registrations
     Registry.instance.clear_query_registrations
   end
 
   def self.register_query(query, response)
     Registry.instance.register_query(query, response)
+  end
+
+  def self.user_registered?(attrs)
+    Registry.instance.user_registered?(attrs)
   end
 
   def self.query_registered?(query)

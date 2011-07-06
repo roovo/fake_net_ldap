@@ -2,6 +2,15 @@ require 'net/ldap'
 
 class Net::LDAP
 
+  def auth(username, password)
+    @username = username
+    @password = password
+  end
+
+  def bind
+    FakeNetLdap.user_registered?(:username => @username, :password => @password)
+  end
+
   def search(attrs, &block)
     if FakeNetLdap.query_registered?(attrs[:filter])
       FakeNetLdap.response_for(attrs[:filter], &block)
