@@ -4,6 +4,10 @@ describe "registering queries" do
 
   let(:filter) { Net::LDAP::Filter.present("objectclass") }
 
+  before do
+    FakeNetLdap.clear_query_registrations
+  end
+
   it "should allow queries to be registered to respond with a hash (for a single response)" do
     FakeNetLdap.register_query(filter, {"name" => "Fred Blogs"})
     FakeNetLdap.query_registered?(filter).should be_true
@@ -35,9 +39,10 @@ describe "registering queries" do
 
   it "should yield the registered response if an array response is registered" do
     FakeNetLdap.register_query(filter,  [{"name" => "Fred Blogs"}, {"name" => "John Smith"}])
+    filter_copy = Net::LDAP::Filter.present("objectclass")
     responses = []
     connection = ldap_connection
-    connection.search(:base => 'cn=plop', :filter => filter) do |result|
+    connection.search(:base => 'cn=plop', :filter => filter_copy) do |result|
       responses << result
     end
     responses.should == [{"name" => "Fred Blogs"}, {"name" => "John Smith"}]

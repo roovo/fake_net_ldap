@@ -6,6 +6,10 @@ require 'fake_net_ldap/responder'
 
 module FakeNetLdap
 
+  def self.clear_query_registrations
+    Registry.instance.clear_query_registrations
+  end
+
   def self.register_query(query, response)
     Registry.instance.register_query(query, response)
   end
