@@ -7,28 +7,28 @@ module FakeNetLdap
       clear_user_registrations
     end
 
-    def clear_query_registrations
-      @query_map = {}
-    end
-
     def clear_user_registrations
       @user_map = {}
+    end
+
+    def register_user(attrs)
+      @user_map[attrs[:username]] = attrs[:password]
     end
 
     def user_registered?(attrs)
       @user_map.has_key?(attrs[:username]) && (@user_map[attrs[:username]] == attrs[:password])
     end
 
-    def query_registered?(query)
-      @query_map.has_key?(query.to_s) || @query_map.has_key?('unregistered_query')
+    def clear_query_registrations
+      @query_map = {}
     end
 
     def register_query(query, response)
       @query_map[query.to_s] = FakeNetLdap::Responder.new(query, response)
     end
 
-    def register_user(attrs)
-      @user_map[attrs[:username]] = attrs[:password]
+    def query_registered?(query)
+      @query_map.has_key?(query.to_s) || @query_map.has_key?('unregistered_query')
     end
 
     def response_for(query, &block)
