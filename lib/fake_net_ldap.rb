@@ -1,5 +1,6 @@
 require 'singleton'
 
+require 'fake_net_ldap/ext/net_ldap'
 require 'fake_net_ldap/registry'
 require 'fake_net_ldap/responder'
 
@@ -11,5 +12,9 @@ module FakeNetLdap
 
   def self.query_registered?(query)
     Registry.instance.query_registered?(query)
+  end
+
+  def self.response_for(query, &block)
+    Registry.instance.response_for(query, &block)
   end
 end
