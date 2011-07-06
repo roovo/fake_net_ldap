@@ -16,4 +16,8 @@ describe "registering queries" do
     FakeNetLdap.register_query('with_exception_response', StandardError)
     FakeNetLdap.query_registered?('with_exception_response').should be_true
   end
+
+  it "shold show an unregistered query as unregistered" do
+    FakeNetLdap.query_registered?('unregistered_query').should be_false
+  end
 end
