@@ -1,0 +1,3 @@
+module FakeNetLdap
+  # Your code goes here...
+end
