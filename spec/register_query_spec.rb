@@ -48,6 +48,18 @@ describe "registering queries" do
     responses.should == [{"name" => "Fred Blogs"}, {"name" => "John Smith"}]
   end
 
+  it "should return the registered response if a hash response is registered and block is not passed" do
+    FakeNetLdap.register_query(filter,  {"name" => "Fred Blogs"})
+    responses = ldap_connection.search(base: 'cn=plop', filter: filter)
+    responses.should == {"name" => "Fred Blogs"}
+  end
+
+  it "should return the registered response if an array response is registered and block is not passed" do
+    FakeNetLdap.register_query(filter,  [{"name" => "Fred Blogs"}, {"name" => "John Smith"}])
+    responses = ldap_connection.search(base: 'cn=plop', filter: filter)
+    responses.should == [{"name" => "Fred Blogs"}, {"name" => "John Smith"}]
+  end
+
   it "should raise an exception if an exception response is registered" do
     class ExpectedException < StandardError ; end ;
     FakeNetLdap.register_query(filter,  ExpectedException)
