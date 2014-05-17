@@ -10,9 +10,9 @@ module FakeNetLdap
     def respond(&block)
       case @response
       when Hash
-        yield @response
+        block ? (yield @response) : @response
       when Array
-        @response.each { |r| yield r }
+        block ? (@response.each { |r| yield r }) : @response
       when Class
         raise @response.new
       end
