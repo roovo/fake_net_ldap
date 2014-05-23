@@ -3,6 +3,7 @@ require 'spec_helper'
 describe "registering a response to unregistered queries" do
 
   let(:filter) { Net::LDAP::Filter.present("objectclass") }
+  let(:connection) { ldap_connection }
 
   before do
     FakeNetLdap.clear_query_registrations
@@ -10,7 +11,6 @@ describe "registering a response to unregistered queries" do
 
   it "should raise an ConnectionNotAllowed exception if the response to unregistered queries has not been set" do
     FakeNetLdap.query_registered?(filter).should be_false
-    connection = ldap_connection
     lambda { connection.search(:base => 'cn=plop', :filter => filter) { |r| } }.should raise_error(FakeNetLdap::ConnectionNotAllowed)
   end
 
@@ -22,7 +22,7 @@ describe "registering a response to unregistered queries" do
   it "should return the response if the response to unregistered queries has been set" do
     FakeNetLdap.register_query(:unregistered_query, {"name" => "Fred Blogs"})
     responses = []
-    connection = ldap_connection
+    connection.stub(:bind).and_return(true)
     connection.search(:base => 'cn=plop', :filter => filter) do |result|
       responses << result
     end
